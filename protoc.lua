@@ -10,6 +10,7 @@ local assert = assert
 local tostring = tostring
 local type = type
 local insert_tab = table.insert
+local core = require("apisix.core")
 
 local function meta(name, t)
    t = t or {}
@@ -337,7 +338,17 @@ function Parser:parsefile(name)
       info = self.import_fallback(name)
    end
    if not info then
-      error("module load error: "..name.."\n\t"..table.concat(errors, "\n\t"))
+      local key = "/proto"
+
+      key = key .. "/" .. name
+
+      local res, err = core.etcd.get(key, not id)
+      if not res then
+         error("module load error: "..name.."\n\t"..table.concat(errors, "\n\t")..err)
+      end
+      local info = self:parse(res.body.node.value.content, name)
+      core.log.warn("try to import pb",core.json.delay_encode(info))
+      return info
    end
    return info
 end

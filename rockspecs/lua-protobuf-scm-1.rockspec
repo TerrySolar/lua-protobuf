@@ -2,7 +2,7 @@ package = "lua-protobuf"
 version = "scm-1"
 
 source = {
-  url = "git://github.com/starwing/lua-protobuf.git",
+  url = "git://github.com/TerrySolar/lua-protobuf.git",
 }
 
 description = {
@@ -10,7 +10,7 @@ description = {
   detailed = [[
 This project offers a simple C library for basic protobuf wire format encode/decode.
   ]],
-  homepage = "https://github.com/starwing/lua-protobuf",
+  homepage = "https://github.com/TerrySolar/lua-protobuf",
   license = "MIT",
 }
 
