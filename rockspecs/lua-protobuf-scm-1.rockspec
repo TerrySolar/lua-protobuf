@@ -1,4 +1,4 @@
-package = "lua-protobuf"
+package = "lua-protobuf-etcd"
 version = "scm-1"
 
 source = {
