@@ -322,34 +322,17 @@ end
 function Parser:parsefile(name)
    local info = self.loaded[name]
    if info then return info end
+
    local errors = {}
-   for _, path in ipairs(self.paths) do
-      local fn = path ~= "" and path.."/"..name or name
-      local fh, err = io.open(fn)
-      if fh then
-         local content = fh:read "*a"
-         info = self:parse(content, name)
-         fh:close()
-         return info
-      end
-      insert_tab(errors, err or fn..": ".."unknown error")
-   end
-   if self.import_fallback then
-      info = self.import_fallback(name)
-   end
-   if not info then
-      local key = "/proto"
+   local prefix = "/proto"
+   local key = prefix .. "/" .. name
 
-      key = key .. "/" .. name
-
-      local res, err = core.etcd.get(key, not id)
-      if not res then
-         error("module load error: "..name.."\n\t"..table.concat(errors, "\n\t")..err)
-      end
-      local info = self:parse(res.body.node.value.content, name)
-      core.log.warn("try to import pb",core.json.delay_encode(info))
-      return info
+   local res, err = core.etcd.get(key, not id)
+   if not res then
+      error("module load error: "..name.."\n\t"..table.concat(errors, "\n\t")..err)
    end
+
+   local info = self:parse(res.body.node.value.content, name)
    return info
 end
 
