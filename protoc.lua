@@ -866,7 +866,8 @@ function Parser:parse(src, name)
       end
       lex:line_end "opt"
    end
-   self.loaded[name] = name ~= "<input>" and info or nil
+   --self.loaded[name] = name ~= "<input>" and info or nil
+   if name then self.loaded[name] = info end
    return ctx:resolve(lex, info)
 end
 
