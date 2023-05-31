@@ -2,7 +2,7 @@ package = "lua-protobuf"
 version = "0.4.2-1"
 source = {
    url = "git+https://github.com/TerrySolar/lua-protobuf.git",
-   tag = "0.4.2"
+   tag = "0.4.2-1"
 }
 description = {
    summary = "protobuf data support for Lua",
