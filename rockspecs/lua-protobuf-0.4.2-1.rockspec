@@ -1,4 +1,4 @@
-package = "lua-protobuf"
+package = "lua-protobuf-etcd"
 version = "0.4.2-1"
 source = {
    url = "git+https://github.com/TerrySolar/lua-protobuf.git",
