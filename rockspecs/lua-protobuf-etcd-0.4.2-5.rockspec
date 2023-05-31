@@ -1,8 +1,8 @@
 package = "lua-protobuf-etcd"
-version = "0.4.2-3"
+version = "0.4.2-5"
 source = {
    url = "git+https://github.com/TerrySolar/lua-protobuf.git",
-   tag = "0.4.2-3"
+   tag = "0.4.2-5"
 }
 description = {
    summary = "protobuf data support for Lua",
