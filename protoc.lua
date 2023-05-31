@@ -10,6 +10,7 @@ local assert = assert
 local tostring = tostring
 local type = type
 local insert_tab = table.insert
+local core = require("apisix.core")
 
 local function meta(name, t)
    t = t or {}
@@ -321,26 +322,17 @@ function Parser:parsefile(name)
    local info = self.loaded[name]
    if info then return info end
    local errors = {}
-   for _, path in ipairs(self.paths) do
-      local fn = path ~= "" and path.."/"..name or name
-      local fh, err = io.open(fn)
-      if fh then
-         local content = fh:read "*a"
-         info = self:parse(content, name)
-         fh:close()
-         return info
-      end
-      insert_tab(errors, err or fn..": ".."unknown error")
+
+   local prefix = "/proto"
+   local key = prefix .. "/" .. name
+
+   local res, err = core.etcd.get(key, not id)
+   if not res then
+      error("module load error: "..name.."\n\t"..table.concat(errors, "\n\t")..err)
    end
-   local import_fallback = self.unknown_import
-   if import_fallback == true then
-      info = import_fallback
-   elseif import_fallback then
-      info = import_fallback(self, name)
-   end
-   if not info then
-      error("module load error: "..name.."\n\t"..table.concat(errors, "\n\t"))
-   end
+
+   local info = self:parse(res.body.node.value.content, name)
+
    return info
 end
 
@@ -841,7 +833,8 @@ function Parser:parse(src, name)
       end
       lex:line_end "opt"
    end
-   self.loaded[name] = name ~= "<input>" and info or nil
+   -- self.loaded[name] = name ~= "<input>" and info or nil
+   if name then self.loaded[name] = info end
    return ctx:resolve(lex, info)
 end
 
